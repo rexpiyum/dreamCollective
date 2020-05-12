@@ -56,15 +56,25 @@ export default function NewPrompt(props){
   <PromptHelpContainer>
         <PromptWrapper><Prompt marginTop={"1vw"} marginBottom={"2vw"} text={"What do you want others to tell you about their dream "+props.topicName}></Prompt></PromptWrapper>
         <HelpWrapper>
-          <Hints instruction={"dfdfdfd"} choices={promptChoices} onSelect={(value)=>setPromptText(value)}></Hints>
+          <Hints instruction={"dfdfdfd"} choices={promptChoices} onSelect={
+            (value)=>{
+              setPromptText(value);
+              props.onPromptChange(props.index, {text:value, startingLine:startingLine})
+          }}></Hints>
           </HelpWrapper>
         </PromptHelpContainer>
         
-        <TextArea rows={4} value={promptText} onChangeCallback={(ev)=>setPromptText(ev.target.value)}></TextArea>
+        <TextArea rows={4} value={props.promptText} onChangeCallback={
+          (ev)=>{setPromptText(ev.target.value);
+            props.onPromptChange(props.index, {text:ev.target.value, startingLine:startingLine})
+        }}></TextArea>
 
         <PromptHelpContainer>
         <PromptWrapper><Prompt marginTop={"3vw"} marginBottom={"2vw"} text={"How would you like othes to start their response"}></Prompt></PromptWrapper>
-        <TextArea rows={2} value={startingLine} onChangeCallback={(ev)=>setStartingLine(ev.target.value)}></TextArea>
+        <TextArea rows={2} value={prompt.startingLine} onChangeCallback={
+          (ev)=>{setStartingLine(ev.target.value);
+            props.onPromptChange(props.index, {text:promptText, startingLine:ev.target.value})}
+          }></TextArea>
         <HelpWrapper><Hints></Hints></HelpWrapper>
         </PromptHelpContainer>
       </InputContainer>

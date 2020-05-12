@@ -8,6 +8,8 @@ import SetupDreamActivityView from './components/views/createTopic/SetupDreamAct
 import SetupPromptsView from './components/views/createTopic/SetupPromptsView';
 import LandingPage from "./components/landing/LandingPage"
 import AllTopicsView from './components/views/allTopics/AllTopicsView';
+import TopicView from './components/views/topic/TopicView';
+import AddFeaturesView from './components/views/activity/AddFeaturesView'
 
 
 
@@ -21,6 +23,8 @@ function App() {
           <Route exact path="/newTopic/1" component={CreateTopicView} />
           <Route exact path="/newTopic/2/:id" component={SetupDreamActivityView} />
           <Route exact path="/newTopic/3/:id" component={SetupPromptsView} />
+          <Route exact path="/topic/:id" component={TopicView} />
+          <Route exact path="/response/:id" component={AddFeaturesView} />
 
         </Switch>
     </div>

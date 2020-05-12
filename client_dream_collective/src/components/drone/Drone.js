@@ -14,6 +14,8 @@ const Container = styled.div`
   margin:auto;
   width:80vw;
   z-index:100;
+  border-radius:100vw;
+  /* background-color:${theme.lightGray} */
 `;
 
 const DroneImage = styled.img`
@@ -45,29 +47,18 @@ class Drone extends Component {
     };
   }
   
-  updateDrone() {
-    fetch('/drones/' + this.state.drone._id,
-      {
-        method: 'PUT',
-        body: JSON.stringify(this.state.drone),
-        headers: {
-          'Accept': 'application/json, text/plain, */*',
-          'Content-Type': 'application/json',
-          'Mode': "CORS"
-        }
-      }).then(response => response.json())
-      .then(data => { console.log(data) }
-      );
-  }
-
   render() {
+
+  const topic =  this.props.drone.topic;
 
     return (
           <Container>
-            <DroneImage src={logo} alt="logo" ></DroneImage>
+            <DroneImage src={topic.category== 0 ? require("./assets/product.svg"):topic.category== 1 ? require("./assets/space.svg"):require("./assets/service.svg")} ></DroneImage>
             <FeatureContainer>
               {this.props.drone.features.map((item, key) =>
-              <Feature isAuthor={item.createdBy == this.props.drone.createdBy._id} featureType={this.props.editable? FeatureType.removable : FeatureType.disabled} title={item.title} description={item.description} clickHandler={(featureProps)=> this.props.featureClickHandler(featureProps)} index={key}></Feature>
+              <Feature 
+              featureType={this.props.editable? FeatureType.removable : FeatureType.disabled} name={item.name} 
+              description={item.description} clickHandler={(featureProps)=> this.props.featureClickHandler(featureProps)} index={key}></Feature>
               )}
               </FeatureContainer>
           </Container>

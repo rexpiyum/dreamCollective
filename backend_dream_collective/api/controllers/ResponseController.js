@@ -26,7 +26,7 @@ exports.readResponse = function(req, res) {
     if (err)
       res.send(err);
     res.json(response);
-  }).populate('prompt').populate('features');
+  }).populate('prompt').populate('features').populate('topic');
 };
 
 exports.updateResponse = function(req, res) {

@@ -43,7 +43,7 @@ const Description = styled.textarea`
   overflow: auto;
   outline: none;
   max-width:95%;
-  min-height:70%
+  min-height:70%;
 `;
 
 const AddButton = styled.button`
@@ -60,11 +60,11 @@ padding:0.5vw 1vw;
    background-color:${props => props.disabled ? '#ffffff' : theme.secondaryColor};
   color:${props => props.disabled ? 'lightgrey' : '#ffffff'};
 }
-font-size: 1.2vw
+font-size: 1.2vw;
 margin:auto;
 margin-bottom: 0vw;
 font-family: "Nunito";
-font-weight: 900
+font-weight: 900;
 color:${props => props.disabled ? 'lightgrey' : theme.secondaryColor};
 outline:none;
 
@@ -91,7 +91,6 @@ class NewFeature extends Component {
       titlePlaceholder: TITLE_PLACEHOLDER,
       description: "",
       descriptionPlaceholder: DESCRIPTION_PLACEHOLDER,
-      createdBy:props.createdBy
     };
   }
 
@@ -106,8 +105,8 @@ class NewFeature extends Component {
           placeholder={this.state.titlePlaceholder}
           onClick={(ev) => { this.setState({ titlePlaceholder: "" }) }}
           onBlur={(ev) => { this.setState({ titlePlaceholder: TITLE_PLACEHOLDER }) }}
-          value={this.state.title}
-          onChange={(ev) => this.onTitleChange(ev)}
+          value={this.props.feature.name}
+          onChange={(ev) => this.props.onNameChange(this.props.index, ev.target.value)}
           onKeyPress={(ev) => this.onTitleKeyPress(ev)}>
         </Title>
 
@@ -116,8 +115,8 @@ class NewFeature extends Component {
           placeholder={this.state.descriptionPlaceholder}
           onClick={(ev) => { this.setState({ descriptionPlaceholder: "" }) }}
           onBlur={(ev) => { this.setState({ descriptionPlaceholder: DESCRIPTION_PLACEHOLDER }) }}
-          value={this.state.description}
-          onChange={(ev) => this.onDescriptionChange(ev)}>
+          value={this.props.feature.description}
+          onChange={(ev) => {this.props.onDescriptionChange(this.props.index, ev.target.value)}}>
         </Description>
 
       </Container>

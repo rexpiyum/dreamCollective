@@ -160,7 +160,7 @@ componentDidMount(){
           </Inline>
           {this.state.allTopics && <TopicsContainer>
             {this.state.allTopics.map((value, key) =>{
-              return <TopicCard topic={value}></TopicCard>
+              return <TopicCard onClick={(id)=>this.props.history.push("../topic/"+id)} topic={value}></TopicCard>
             })}
             </TopicsContainer>}
         </ContentContainer>

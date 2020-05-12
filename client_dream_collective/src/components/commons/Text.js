@@ -13,9 +13,11 @@ const Para = styled.p`
   margin-top:${(props)=>props.marginTop? props.marginTop: "0"};
   margin-bottom:${(props)=>props.marginBottom? props.marginBottom: "0"};
   text-align:left;
+  border:${(props)=>props.border? "2px solid "+theme.secondaryColor : "none"};
+  padding:${(props)=>props.border? "2vw" : "none"};
 `;
 
 export default function Text(props){
-    return <Para isDisabled={props.isDisabled} isSmall={props.isSmall} marginBottom={props.marginBottom} marginTop={props.marginTop}>{props.text}</Para>
+    return <Para border= {props.border} isDisabled={props.isDisabled} isSmall={props.isSmall} marginBottom={props.marginBottom} marginTop={props.marginTop}>{props.text}</Para>
         
 }

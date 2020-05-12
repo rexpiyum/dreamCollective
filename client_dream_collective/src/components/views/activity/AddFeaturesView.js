@@ -1,15 +1,16 @@
 import React, { Component } from "react";
 import styled from "styled-components";
-import Feature, { FeatureType as FeatureTypes } from "./feature/Feature";
-import NewFeature from "./feature/NewFeature";
-import Drone from "./drone/Drone"
-import LoadingWidget from "./LoadingWidget";
-import {isGibberish} from "../utils.js"
-import {devices} from "../devices.js"
-import Header from "./commons/header/Header"
+import Feature, { FeatureType as FeatureTypes } from "../../feature/Feature";
+import NewFeature from "../../feature/NewFeature";
+import Drone from "../../drone/Drone"
+import LoadingWidget from "../../LoadingWidget";
+import {isGibberish} from "../../../utils.js"
+import {devices} from "../../../devices.js"
+import Header from "../../commons/header/Header"
+import Button from "../../commons/Button"
 
 
- import {theme} from "../config/colorTheme";
+ import {theme} from "../../../config/colorTheme";
 
 const Wrapper = styled.div`
   width:100%;
@@ -19,33 +20,26 @@ const Wrapper = styled.div`
 const ContentWrapper = styled.div`
   margin:auto;
   position:relative;
-
-  @media ${devices.mobile} {
-    flex-direction:column;
-    height:auto;
-  }
-
+  width:90vw;
+  padding-bottom:5vw;
 `;
 
 const DroneContainer = styled.div`
   position:relative;
   margin:auto;
-  height:54vh;
+  height:60vh;
   overflow:visible;
   
 `;
 
 const FeatureContainer = styled.div`
 height:38vh;
-  display:flex
-  @media ${devices.mobile} {
-    margin:auto;
-  }
+  display:flex;
 `;
 
 const CreateFeatureContainer = styled.div`
   width:30vw;
-  background-color:${theme.secondaryColor20}
+  /* background-color:${theme.secondaryColor20} */
   display:flex;
   flex-direction:column;
   align-items:center;
@@ -55,7 +49,7 @@ const CreateFeatureContainer = styled.div`
 
 const FeatureSetContainer = styled.div`
   width:70vw;
-  background-color:${theme.primaryColor20};
+  /* background-color:${theme.primaryColor20}; */
   display:flex;
   flex-direction:column;
   align-items:center;
@@ -97,41 +91,6 @@ margin:auto 0.2vw;
 
 `;
 
-const Button = styled.button`
-border-radius:0.5vw;
-border: solid 1px ${theme.primaryColor};
-background-color:#ffffff;
-min-width:7vw;
-height:2.3vw;
-max-height:2.3vw;
-transition: transform .3s;
-cursor: pointer;
-text-align: center;
-vertical-align: middle;
-
-&:hover{
-  background-color:${theme.secondaryColor};
-  color:#ffffff;
-  border: solid 1px ${theme.primaryColor};
-}
-font-size: 1.2vw
-margin: auto;
-font-family: "Nunito";
-font-weight: 900
-color:${theme.primaryColor};
-outline:none;
-
-@media ${devices.mobile} {
-  width:20vw;;
-  height:auto;
-  max-height:10vw;
-  font-size: 4vw
-  
-}
-
-`;
-
-
 const FeatureSet = styled.div`
   display:flex
   justify-content:space-around;  
@@ -157,7 +116,7 @@ const DotWrapper = styled.div`
 const Dot = styled.div`
   width:1.5vh;
   height:1.5vh;
-  background-color:${props => props.selected ? theme.primaryColor : '#DCDCDC'};
+  background-color:${props => props.selected ? theme.secondaryColor : theme.lightGray};
   border-radius:5vw;
 
   @media ${devices.mobile} {
@@ -167,16 +126,19 @@ const Dot = styled.div`
   }
 `;
 
+const ButtonWrapper = styled.div`
+  width:20vw;
+  margin-top:4vw;
+  
+  float:right;
+`;
 
-const FEATURE_SET_SIZE = 12;
-var VISIBLE_FEATURES_COUNT = 3;
 
-var LEFT_FACTOR = 26;
-var TOP_FACTOR = 13;
-var LEFT_0 = 6.5;
-var TOP_0 = 6.5;
+var APICalls = require("../../../utils/APICalls")
 
-const dummyArrayOfFour = ["", "", "", ""];
+const VISIBLE_FEATURES_COUNT = 3;
+const  FEATURE_SET_SIZE = 12;
+
 
 
 
@@ -200,7 +162,7 @@ var featurePool = [
 
 ];
 
-class AddStoryView extends Component {
+class AddFeaturesView extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -208,75 +170,67 @@ class AddStoryView extends Component {
       visibleFetures: [],
       featureSet: [],
       selectedFetures: [],
-      drone: null
+      response: null
     };
 
     
   }
 
   componentDidMount() {
-    if(window.innerWidth < 800){
-      VISIBLE_FEATURES_COUNT = 2;
-      LEFT_FACTOR = 65;
-      TOP_FACTOR = 32;
-      LEFT_0 = 7.2;
-      TOP_0 = 9.6;
-    }
-    document.title="Dream Drone";
+    window.scrollTo(0, 0);
     //fetch features, populate the feature pool, populate featureset
-    fetch("/features/")
-      .then(response => response.json())
-      .then(data => {
-        featurePool = data;
-        this.setFeatureSet(FEATURE_SET_SIZE);
-      });
+    // fetch("/features/")
+    //   .then(response => response.json())
+    //   .then(data => {
+    //     featurePool = data;
+    //     this.setFeatureSet(FEATURE_SET_SIZE);
+    //   });
 
     //fetch the drone data using id
-    fetch("/drones/" + this.props.match.params.id)
-      .then(response => response.json())
-      .then(data => {
-        this.setState({drone: data});
-      });
+    APICalls.readResponse(this.props.match.params.id, (data) => {
+      APICalls.readFeaturesOfTopic(data.topic._id,
+        (data) => { featurePool = data;
+                    this.setFeatureSet(FEATURE_SET_SIZE);})
+      this.setState({ response: data });
+
+    })
   }
 
   updateDrone() {
-    fetch('/drones/' + this.state.drone._id,
+    fetch('/responses/' + this.state.response._id,
       {
         method: 'PUT',
-        body: JSON.stringify(this.state.drone),
+        body: JSON.stringify(this.state.response),
         headers: {
           'Accept': 'application/json, text/plain, */*',
           'Content-Type': 'application/json',
           'Mode': "CORS"
         }
-      }).then(response => response.json())
-      .then(data => { console.log(data) }
+      }).then(data => { console.log(data) }
       );
   }
 
   render() {
-
-    if ((this.state.drone == null) && this.state.featureSet) return <LoadingWidget></LoadingWidget>;
-
+    if ((this.state.response == null) && this.state.featureSet) return <LoadingWidget></LoadingWidget>;
     return (
       <Wrapper>
-        <Header text={"1. Add Superpowers to your Dream Drone"} disableNext={this.state.drone.features.length<=0} onNextCallback={this.state.drone.features.length>0? ()=>this.props.history.push('../story/' + this.state.drone._id):null}>
+        <Header text={"Add superpowers to your dream " + this.state.response.topic.name}>
         </Header>
         <ContentWrapper>
           <DroneContainer>
-            <Drone featureClickHandler={this.handleFeaureClick.bind(this)} editable={true} drone={this.state.drone}></Drone>
+            <Drone featureClickHandler={this.handleFeaureClick.bind(this)} editable={true} drone={this.state.response}></Drone>
           </DroneContainer>
           <FeatureContainer>
             <CreateFeatureContainer>
               <RowHeader>+ Create new superpower</RowHeader>
-                <NewFeature createdBy={this.state.drone.createdBy} clickHandler={this.handleAddNewFeatureClick.bind(this)} />
+                <NewFeature topicId={this.state.response.topic._id} clickHandler={this.handleAddNewFeatureClick.bind(this)} />
             </CreateFeatureContainer>
             <FeatureSetContainer>
               <RowHeader>or, choose from what others have created</RowHeader>
               <FeatureSet>
                 <PaginationButton src={require('./assets/left_arrow_icon.svg')} onClick={() => this.handlePreviousClick()}></PaginationButton>
                 {this.state.featureSet.slice(this.state.visiblefeatureIndex, this.state.visiblefeatureIndex + VISIBLE_FEATURES_COUNT).map((item, key) =>
-                  <Feature title={item.title} description={item.description} featureType={FeatureTypes.selectable} clickHandler={this.handleFeaureClick.bind(this)} index={this.state.visiblefeatureIndex + key}></Feature>
+                  <Feature name={item.name} description={item.description} featureType={FeatureTypes.selectable} clickHandler={this.handleFeaureClick.bind(this)} index={this.state.visiblefeatureIndex + key}></Feature>
                   , this)}
                 <PaginationButton src={require('./assets/right_arrow_icon.svg')} onClick={() => this.handleNextClick()}></PaginationButton>
               </FeatureSet>
@@ -285,6 +239,9 @@ class AddStoryView extends Component {
                 </DotWrapper>
               </FeatureSetContainer>
           </FeatureContainer>
+          <ButtonWrapper>
+            <Button text={"Next"}></Button>
+          </ButtonWrapper>
         </ContentWrapper>
       </Wrapper>
     )
@@ -302,8 +259,9 @@ class AddStoryView extends Component {
     let selected = false;
     let index = this.state.visiblefeatureIndex;
     
+    const size =Math.min(this.state.featureSet.length, FEATURE_SET_SIZE)
 
-    for (let i = 0; i < FEATURE_SET_SIZE / VISIBLE_FEATURES_COUNT; i++) {
+    for (let i = 0; i < size / VISIBLE_FEATURES_COUNT; i++) {
       selected = i == index/VISIBLE_FEATURES_COUNT;
       dots.push(<Dot selected={selected}></Dot>)
     }
@@ -311,7 +269,7 @@ class AddStoryView extends Component {
   }
 
   handleFeaureClick = (feature) => {
-    let drone = this.state.drone;
+    let drone = this.state.response;
     if (feature.featureType == FeatureTypes.selectable) {
       if (drone.features.length >= 4){
         this.displayMaxFeaturesAlert();
@@ -335,18 +293,18 @@ class AddStoryView extends Component {
   }
 
   handleAddNewFeatureClick = (feature) => {
-    let drone = this.state.drone;
+    let drone = this.state.response;
     if (drone.features.length >= 4){
       this.displayMaxFeaturesAlert();
       return
     }
     drone.features.push(feature);
-    this.setState({ drone: drone });
+    this.setState({ response: drone });
     this.updateDrone();
   }
 
   displayMaxFeaturesAlert(){
-    alert("Your dream drone can have a maximum of 4 superpowers.");
+    alert("Your dream " + this.state.response.topic.name+ " can have a maximum of 4 superpowers.");
   }
 
   handleNextClick() {
@@ -366,12 +324,12 @@ class AddStoryView extends Component {
   setFeatureSet(length) {
     var featureSet = [];
     for(var item of featurePool){
-      if(!isGibberish(item.title,4) && !isGibberish(item.description,8)){
+      // if(!isGibberish(item.title,4) && !isGibberish(item.description,8)){
         featureSet.push(item);
         if(featureSet.length>= length) {
           break;
         }
-      }
+      // }
     };
     //featureSet = featurePool.splice(0, length)
     this.setState({ featureSet: featureSet });
@@ -384,4 +342,4 @@ class AddStoryView extends Component {
 
 }
 
-export default AddStoryView;
+export default AddFeaturesView;

@@ -9,8 +9,6 @@ var topicSchema = new Schema({
   
   category: { type: Number},
 
-  prompts: [{type: mongoose.Schema.Types.ObjectId, ref: 'Prompt'}],
-
   createdBy: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
 
   createdDate: {

@@ -35,7 +35,7 @@ const Body = styled.div`
 animation: ${animationKeyFrames.fadeIn} 1s;
 `;
 
-export default function Prompt(props) {
+export default function Help(props) {
   const [expand, setExpand] = useState(0);
   return <Container expand={expand}>
     <Icon

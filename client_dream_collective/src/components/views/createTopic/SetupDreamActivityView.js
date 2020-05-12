@@ -9,6 +9,7 @@ import TextArea from "../../commons/TextArea"
 import Category from "./Category"
 import Footer from "../../commons/Footer"
 import NewFeature from "./NewFeature";
+import ActivityPreview from "./ActivityPreview";
 
 
 
@@ -39,10 +40,9 @@ margin:auto;
 
 const PreviewWrapper = styled.div`
   width:100%;
-  height:40vw;
   padding:4vw;
   margin:1vw auto;
-  background-color:${theme.accentColor20};
+  border: 4px solid ${theme.accentColor20};
 `;
 
 
@@ -54,7 +54,21 @@ class SetupDreamActivityView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      topic: null
+      topic: null,
+      features: [
+        {
+          name: "",
+          description: ""
+        },
+        {
+          name: "",
+          description: ""
+        },
+        {
+          name: "",
+          description: ""
+        }
+      ]
     };
   }
 
@@ -75,9 +89,14 @@ class SetupDreamActivityView extends Component {
         <ContentWrapper>
           <Prompt text={"How would you reimagine this " + categories[this.state.topic.category] + "? Create 3 dream features for your " + this.state.topic.name + " to inspire others"}></Prompt>
           <FeatureContainer>
-            <NewFeature clickHandler={(data) => { }}></NewFeature>
-            <NewFeature clickHandler={(data) => { }}></NewFeature>
-            <NewFeature clickHandler={(data) => { }}></NewFeature>
+            {this.state.features.map(
+              (value,index) => <NewFeature 
+              feature={value} 
+              index={index}
+              onNameChange={(i,name)=>this.handleFeatureNameChange(i,name)} 
+              onDescriptionChange={(i,description)=>this.handleFeatureDescriptionChange(i,description)}
+              topicId={this.state.topic_id} clickHandler={(data) => { }}></NewFeature>
+            )}
           </FeatureContainer>
 
           {this.state.category > -1 && <div><Prompt marginTop={"4vw"} marginBottom={"1vw"} text={"Give your dream " + categories[this.state.category] + " a name:"}></Prompt>
@@ -90,12 +109,15 @@ class SetupDreamActivityView extends Component {
               onChangeCallback={(ev) => this.setState({ description: ev.target.value })}
             ></TextArea>
           </div>}
-          <Prompt isSmall={true} marginTop={"3vw"} marginBottom={"1vw"} text={"A preview of your dream " +this.state.topic.name+" activity. This is how others will be able to contribute to your project"}></Prompt>
-          <PreviewWrapper></PreviewWrapper>
+          <Prompt isSmall={true} marginTop={"3vw"} marginBottom={"1vw"} text={"A preview of your dream " + this.state.topic.name + " activity. This is how others will be able to contribute to your project"}></Prompt>
+          <PreviewWrapper>
+            <ActivityPreview topic={this.state.topic} features={this.state.features}></ActivityPreview>
+
+          </PreviewWrapper>
 
 
         </ContentWrapper>
-        {<Footer onNextCallback={() => APICalls.updateTopic(this.state.topic._id, this.state, (data) => this.props.history.push("/newTopic/3/" + this.state.topic._id))}></Footer>}
+        {<Footer onNextCallback={() => this.handleNext()}></Footer>}
       </Wrapper>
     )
   }
@@ -104,6 +126,32 @@ class SetupDreamActivityView extends Component {
   handleCreateTopicCallback(data) {
     this.props.history.push('/newTopic/2/data._id');
   }
+
+  handleNext(){
+    this.state.features.map(
+      (value,index)=>{
+        if(value.name && value.description){
+          APICalls.createNewFeature({topic:this.state.topic._id, name:value.name, description:value.description}, (data)=>console.log(data))
+        }
+      }
+    );
+    this.props.history.push("/newTopic/3/" + this.state.topic._id)
+  }
+
+
+  handleFeatureNameChange(i,name){
+    var features = this.state.features
+    features[i].name = name;
+    this.setState({features:features})
+  }
+
+  handleFeatureDescriptionChange(i,description){
+    var features = this.state.features
+    features[i].description = description;
+    this.setState({features:features})
+  }
+
+  
 
 
 }

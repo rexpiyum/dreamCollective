@@ -5,6 +5,8 @@ import { theme } from "../../config/colorTheme"
 import { animationKeyFrames } from "../../config/keyframes"
 import TopicCard from "../commons/projectCard/TopicCard"
 import Hero from "../commons/Hero"
+import Prompt from "../commons/Prompt";
+import Text from "../commons/Text";
 
 
 const Container = styled.div`
@@ -15,11 +17,12 @@ const Container = styled.div`
 const ContentContainer = styled.div`
 animation: ${animationKeyFrames.fadeIn} 2s;
 margin:auto;
+width:90vw;
 `;
 
 const Description = styled.div`
+margin-top:8vw;
   width:70vw;
-  margin:8vw;
   font-family: Roboto;
   font-style: normal;
   font-weight: 900;
@@ -152,10 +155,9 @@ componentDidMount(){
 
     return (
       <Container>
-        {!this.state.animation && <ContentContainer>
-          <div ref={(el) => { this.end = el; }}></div>
-          {/* {this.state.renderHeader && <LandingPageHeader onCreateClick={()=>this.props.history.push('/consent')}></LandingPageHeader>} */}
-          <Hero></Hero>
+        <Hero></Hero>
+       <ContentContainer>
+          
           <Description>
           Welcome to the Dream Collective!<br></br> A place where you can reimagine objects, spaces, and services!          </Description>
           <Step>
@@ -188,7 +190,7 @@ componentDidMount(){
           {this.state.allTopics && <TopicsContainer>
             {this.state.allTopics.map((value, key) =>{
               if (key>3) return null;
-              return <TopicCard topic={value}></TopicCard>
+              return <TopicCard onClick={(id)=>this.props.history.push("../topic/"+id)} topic={value}></TopicCard>
             })}
             </TopicsContainer>}
 
@@ -198,7 +200,17 @@ componentDidMount(){
             <Button onClick={() => this.props.history.push('/newTopic/1')} text={"+ New Project"}></Button>
           </ButtonContainer>
           </Inline>
-        </ContentContainer>}
+
+          <Prompt marginTop={"10vw"} marginBottom={"1vw"} text="About this project:"></Prompt>
+          <Text border={true} 
+          text="The Dream Collective is a place where we can envision the future together.  Through collaboration, imagination, and innovation we can shape objects, spaces, and services of the future through our desires and aspirations. "
+          ></Text>
+
+          <Prompt marginTop={"5vw"} marginBottom={"1vw"} text="Who we are:"></Prompt>
+          <Text border={true} 
+          text="We are researchers from the Social and Digital Systems Group at Arizona State University, interested in learning how crowd-generated fictions can shape our future. To learn more about us and our work visit sandsystem.org ."
+          ></Text>
+        </ContentContainer>
       </Container>
 
     )

@@ -7,10 +7,9 @@ import {animationKeyFrames} from "../../config/keyframes"
 
 const Container = styled.div`
   position:relative;
-  border-radius:0.8vw;
-  border: solid 2px ${(props)=> props.isAuthor? theme.secondaryColor:theme.primaryColor};
+  border: solid 1px ${(props)=> props.isAuthor? theme.secondaryColor:theme.secondaryColor};
   width:18vw;
-  height:${(props) => (props.featureType==FeatureType.removable|| props.featureType==FeatureType.disabled) && !props.expand? '8vh': '25vh'}
+  height:${(props) => (props.featureType==FeatureType.removable|| props.featureType==FeatureType.disabled) && !props.expand? '8vh': '25vh'};
   transition: transform, height .3s;
   background-color:#ffffff;
   &:hover{
@@ -93,7 +92,7 @@ class Feature extends Component {
     return (
       <Container isAuthor = {this.props.isAuthor} expand={this.state.overlay} featureType={this.props.featureType} isDisabled={this.props.featureType == FeatureType.disabled} onTouchStart={() => {this.setState({overlay:true})}} onMouseEnter={() => {this.setState({overlay:true})}} onMouseLeave={() => {this.setState({overlay:false})}}>
         <TextContainer>
-        <Title>{this.props.title}</Title>
+        <Title>{this.props.name}</Title>
         {(!(this.props.featureType==FeatureType.removable || this.props.featureType==FeatureType.disabled) || this.state.overlay) && <Description>{this.props.description}</Description>}
         </TextContainer>
         {!(this.props.featureType==FeatureType.disabled) && this.state.overlay && <FeatureButton src={this.props.featureType == FeatureType.selectable ? require('./assets/add_icon.svg'):require('./assets/remove_icon.svg')} onClick={()=>{this.setState({overlay:false}); this.props.clickHandler(this.props)}}></FeatureButton>}

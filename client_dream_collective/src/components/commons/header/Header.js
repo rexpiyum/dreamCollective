@@ -8,10 +8,10 @@ const Container = styled.div`
 width:90vw;
 margin:auto;
 padding:0.8vw 0 1vw 0;
-position: -webkit-sticky;
+/* position: -webkit-sticky;
 position: sticky;
 top: 0;
-z-index:300;
+z-index:300; */
 background-color:${theme.white};
 border-bottom: 2px solid ${theme.secondaryColor};
 `;

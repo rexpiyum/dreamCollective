@@ -10,6 +10,16 @@ exports.listAllFeatures = function(req, res) {
   }).sort({createdDate:-1}).populate('createdBy');
 };
 
+exports.listAllFeaturesOfTopic = function (req, res) {
+  Feature.find({ topic: req.params.topicId }, function (err, feature) {
+    if (err) res.send(err);
+    res.json(feature);
+    console.log(feature);
+  })
+    .sort({ createdDate: -1 })
+    .populate("createdBy");
+};
+
 exports.createFeature = function(req, res) {
   var newFeature = new Feature(req.body);
   newFeature.save(function(err, feature) {

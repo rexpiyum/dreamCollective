@@ -10,4 +10,8 @@ module.exports = function(app) {
     .get(feature.readFeature)
     .put(feature.updateFeature)
     .delete(feature.deleteFeature);
+  
+  app
+    .route("/features/topic/:topicId")
+    .get(feature.listAllFeaturesOfTopic);
 };

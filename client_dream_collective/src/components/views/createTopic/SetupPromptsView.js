@@ -97,24 +97,37 @@ class SetupPromptsView extends Component {
         <Header text={"Create prompts for people to tell you about their dream " + this.state.topic.name} helpBody={mainHelp}></Header>
         <ContentWrapper>
           {this.state.prompts.map((item, key) =>
-            <NewPrompt topicName={this.state.topic.name} promptText={item.text} promptStartingLine={item.startingLine}></NewPrompt>
+            <NewPrompt index={key} topicName={this.state.topic.name} promptText={item.text} startingLine={item.startingLine}
+            onPromptChange={(i,prompt)=>this.handlePromptChange(i,prompt)}></NewPrompt>
           )}
           <AddNewPrompt onClick={()=>this.addNewPrompt()}> + Add another prompt</AddNewPrompt>
         </ContentWrapper>
-        {<Footer onDoneCallback={() => APICalls.updateTopic(this.state.topic._id, this.state, (data) => this.props.history.push("/newTopic/3/" + this.state.topic._id))}></Footer>}
+        {<Footer onDoneCallback={() => this.handlePublish()}></Footer>}
       </Wrapper>
     )
   }
 
+  handlePublish(){
+    this.state.prompts.map(
+      (value,index)=>{
+        APICalls.createNewPrompt({topic:this.state.topic._id, text:value.text, startingLine:value.startingLine}, (data)=>console.log(data))
+      }
+    );
 
-  handleCreateTopicCallback(data) {
-    this.props.history.push('/newTopic/2/data._id');
+    alert("Project published!")
+    this.props.history.push('/topic/'+this.state.topic._id);
   }
 
   addNewPrompt(){
     var prompts = this.state.prompts;
     prompts.push({text:"", startingLine:""})
     this.setState({prompts:prompts})
+  }
+
+  handlePromptChange(i,prompt){
+    var prompts = this.state.prompts;
+    prompts[i] = prompt;
+    this.setState(prompts)
   }
 
 

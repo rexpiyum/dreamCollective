@@ -7,9 +7,11 @@ var promptSchema = new Schema({
     type: String
   },
 
-  statingLine: {
+  startingLine: {
     type: String
   },
+
+  topic:{type: mongoose.Schema.Types.ObjectId, ref: 'Topic'},
 
   createdBy: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
 

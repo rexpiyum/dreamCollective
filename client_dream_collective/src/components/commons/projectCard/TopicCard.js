@@ -44,8 +44,9 @@ transition:transform 0.2s;
 
 
 export default function TopicCard(props) {
-  return <Container>
-<TopicImage onClick={()=>{}} src={props.topic.category== 0 ? require("./assets/product.svg"):props.topic.category== 1 ? require("./assets/service.svg"):require("./assets/space.svg")}></TopicImage>
+  
+  return <Container onClick={()=>props.onClick?props.onClick(props.topic._id):null}>
+<TopicImage  src={props.topic.category== 0 ? require("./assets/product.svg"):props.topic.category== 1 ? require("./assets/service.svg"):require("./assets/space.svg")}></TopicImage>
 <Text>{props.topic.name}</Text>
   </Container>
 }

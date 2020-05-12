@@ -121,11 +121,11 @@ class NewFeature extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      title: "",
+      name: "",
       titlePlaceholder: TITLE_PLACEHOLDER,
       description: "",
       descriptionPlaceholder: DESCRIPTION_PLACEHOLDER,
-      createdBy:props.createdBy
+      topic:props.topicID
     };
   }
 
@@ -140,7 +140,7 @@ class NewFeature extends Component {
           placeholder={this.state.titlePlaceholder}
           onClick={(ev) => { this.setState({ titlePlaceholder: "" }) }}
           onBlur={(ev) => { this.setState({ titlePlaceholder: TITLE_PLACEHOLDER }) }}
-          value={this.state.title}
+          value={this.state.name}
           onChange={(ev) => this.onTitleChange(ev)}
           onKeyPress={(ev) => this.onTitleKeyPress(ev)}>
         </Title>
@@ -154,7 +154,7 @@ class NewFeature extends Component {
           onChange={(ev) => this.onDescriptionChange(ev)}>
         </Description>
 
-        {this.state.title.length > 0 && this.state.description.length > 0 && 
+        {this.state.name.length > 0 && this.state.description.length > 0 && 
         <FeatureButton src={require('./assets/add_icon.svg')} onClick={() => this.handleAddClick()}></FeatureButton>}
 
       </Container>
@@ -163,7 +163,7 @@ class NewFeature extends Component {
   }
 
   onTitleChange(ev) {
-    this.setState({ title: ev.target.value });
+    this.setState({ name: ev.target.value });
   }
 
   onTitleKeyPress(ev) {
@@ -178,7 +178,7 @@ class NewFeature extends Component {
   }
 
   renderAddButton() {
-    if (this.state.title.length > 0 && this.state.description.length > 0) {
+    if (this.state.name.length > 0 && this.state.description.length > 0) {
       return <AddButton disabled={false} onClick={() => this.handleAddClick()}>Add to drone</AddButton>
     }
     return <AddButton disabled={true}>Add to drone</AddButton>
@@ -203,7 +203,7 @@ class NewFeature extends Component {
   }
 
   clear() {
-    this.setState({ title: "", description: "" })
+    this.setState({ name: "", description: "" })
   }
 }
 
